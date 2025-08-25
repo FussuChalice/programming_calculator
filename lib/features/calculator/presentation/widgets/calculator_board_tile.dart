@@ -1,26 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:programming_calculator/core/defines/number_system.dart';
+import 'package:programming_calculator/core/utils/num_converter.dart';
+import 'package:programming_calculator/features/calculator/bloc/calculator_bloc.dart';
 
 class CalculatorBoardTile extends StatelessWidget {
-  final String label;
-  final bool? selected;
+  final NumberSystem localSystem;
+  final NumberSystem globalSystem;
   final String value;
-  final void Function()? onTap;
+
   const CalculatorBoardTile({
     super.key,
-    this.selected,
-    required this.label,
     required this.value,
-    this.onTap,
+    required this.localSystem,
+    required this.globalSystem,
   });
   @override
   Widget build(BuildContext context) {
-    bool isSelected = selected ?? false;
+    bool isSelected = localSystem == globalSystem;
+
+    int decValue = NumConverter.allToDec(value, globalSystem);
+    String localSystemValue = NumConverter.decToAll(decValue, localSystem);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-          onTap: !isSelected ? onTap : null,
+          onTap: () {
+            if (!isSelected) {
+              context.read<CalculatorBloc>().add(
+                CalculatorChangeSystem(localSystem),
+              );
+              context.read<CalculatorBloc>().add(CalculatorClear());
+            }
+          },
           child: Container(
             width: 75,
             height: 58,
@@ -34,7 +47,7 @@ class CalculatorBoardTile extends StatelessWidget {
                   : null,
             ),
             child: Text(
-              label,
+              localSystem.name.toUpperCase(),
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: 'FindersKeepers',
@@ -45,25 +58,13 @@ class CalculatorBoardTile extends StatelessWidget {
             ),
           ),
         ),
-        // Padding(
-        //   padding: EdgeInsetsGeometry.only(right: 16),
-        //   child: Text(
-        //     value,
-        //     style: TextStyle(
-        //       color: Colors.black,
-        //       fontFamily: 'FindersKeepers',
-        //       fontSize: 36,
-        //       height: 1.5,
-        //     ),
-        //   ),
-        // ),
         Expanded(
           child: Padding(
             padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
             child: TextField(
               keyboardType: TextInputType.none,
               readOnly: true,
-              controller: TextEditingController(text: value),
+              controller: TextEditingController(text: localSystemValue),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:programming_calculator/core/defines/number_system.dart';
+import 'package:programming_calculator/features/calculator/bloc/calculator_state.dart';
 import 'package:programming_calculator/features/calculator/presentation/widgets/calculator_board_divider.dart';
 import 'package:programming_calculator/features/calculator/presentation/widgets/calculator_board_tile.dart';
 
 class CalculatorBoard extends StatelessWidget {
-  const CalculatorBoard({super.key});
+  final CalculatorState data;
+  const CalculatorBoard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -16,23 +18,27 @@ class CalculatorBoard extends StatelessWidget {
       child: Column(
         children: [
           CalculatorBoardTile(
-            label: NumberSystem.hex.name.toUpperCase(),
-            value: '0',
+            value: data.display,
+            localSystem: NumberSystem.hex,
+            globalSystem: data.system,
           ),
           CalculatorBoardDivider(),
           CalculatorBoardTile(
-            label: NumberSystem.dec.name.toUpperCase(),
-            value: '0',
+            value: data.display,
+            localSystem: NumberSystem.dec,
+            globalSystem: data.system,
           ),
           CalculatorBoardDivider(),
           CalculatorBoardTile(
-            label: NumberSystem.oct.name.toUpperCase(),
-            value: '0',
+            value: data.display,
+            localSystem: NumberSystem.oct,
+            globalSystem: data.system,
           ),
           CalculatorBoardDivider(),
           CalculatorBoardTile(
-            label: NumberSystem.bin.name.toUpperCase(),
-            value: '0',
+            value: data.display,
+            localSystem: NumberSystem.bin,
+            globalSystem: data.system,
           ),
         ],
       ),
