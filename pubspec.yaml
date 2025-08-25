@@ -1,0 +1,34 @@
+name: programming_calculator
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.8.1
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  flutter_overlay_manager: ^2.0.2
+  package_info_plus: ^8.3.1
+  url_launcher: ^6.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/textures/
+
+  fonts:
+    - family: ChiKareGo2
+      fonts:
+        - asset: assets/fonts/ChiKareGo2.ttf
+
+    - family: FindersKeepers
+      fonts:
+        - asset: assets/fonts/FindersKeepersByGilesBooth.ttf
