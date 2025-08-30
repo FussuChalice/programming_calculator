@@ -1,91 +1,107 @@
+import 'dart:math' as math;
+
 import 'package:programming_calculator/core/defines/number_system.dart';
 
+/// All actions in dart, what do a += b or another operations, equivalent a = a + b.
+
+/// I rewrote the class functionality a bit, since there was no necessary logic
+/// for processing the fractional part. Plus optimization, reducing the number of repetitions.
+/// The old version of the class can be seen in Git. :)
+
 class NumConverter {
-  static String toBin(int value) {
-    if (value == 0) return "0";
+  static String convert(
+    double value,
+    NumberSystem system, {
+    int precision = 10,
+  }) {
+    int intPart = value.truncate();
+    double fracPart = value - intPart;
+
+    String intStr = _convertInt(intPart, system.base);
+    String fracStr = _convertFrac(fracPart, system.base, precision);
+
+    return fracStr.isEmpty ? intStr : "$intStr.$fracStr";
+  }
+
+  static String _convertInt(int number, int base) {
+    if (number == 0) {
+      return "0";
+    }
+
     String result = "";
-    int n = value;
+
+    int n = number;
     while (n > 0) {
-      result = (n % 2).toString() + result;
-      n ~/= 2;
+      int remainder = n % base;
+      result = _digitToChar(remainder) + result;
+      n ~/= base;
     }
+
     return result;
   }
 
-  static String toOct(int value) {
-    if (value == 0) return "0";
+  static double toDouble(String value, NumberSystem system) {
+    final List<String> parts = value.split('.');
+
+    double intPart = 0;
+    final String intStr = parts[0];
+
+    for (int i = 0; i < intStr.length; i++) {
+      int digit = _charToDigit(intStr[i]);
+      int power = intStr.length - i - 1;
+      intPart += digit * math.pow(system.base.toDouble(), power);
+    }
+
+    double fracPart = 0;
+    if (parts.length > 1) {
+      final fracStr = parts[1];
+      for (int i = 0; i < fracStr.length; i++) {
+        int digit = _charToDigit(fracStr[i]);
+        fracPart += digit / math.pow(system.base, i + 1);
+      }
+    }
+
+    return intPart + fracPart;
+  }
+
+  static String _convertFrac(double fraction, int base, int precision) {
     String result = "";
-    int n = value;
-    while (n > 0) {
-      result = (n % 8).toString() + result;
-      n ~/= 8;
+    double fractionTmp = fraction;
+
+    for (var i = 0; i < precision && fractionTmp > 0; i++) {
+      fractionTmp *= base;
+      int digit = fractionTmp.truncate();
+      result += _digitToChar(digit);
+      fractionTmp -= digit;
     }
+
     return result;
   }
 
-  static String toHex(int value) {
-    if (value == 0) return "0";
-    const hexDigits = "0123456789ABCDEF";
-    String result = "";
-    int n = value;
-    while (n > 0) {
-      int remainder = n % 16;
-      result = hexDigits[remainder] + result;
-      n ~/= 16;
-    }
-    return result;
+  static const List<String> _symbols = [
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+  ];
+
+  static int _charToDigit(String char) {
+    return _symbols.indexOf(char.toUpperCase());
   }
 
-  static int binToDec(String bin) {
-    int result = 0;
-    for (int i = 0; i < bin.length; i++) {
-      result = result * 2 + (bin.codeUnitAt(i) - '0'.codeUnitAt(0));
-    }
-    return result;
-  }
-
-  static int octToDec(String oct) {
-    int result = 0;
-    for (int i = 0; i < oct.length; i++) {
-      result = result * 8 + (oct.codeUnitAt(i) - '0'.codeUnitAt(0));
-    }
-    return result;
-  }
-
-  static int hexToDec(String hex) {
-    const hexDigits = "0123456789ABCDEF";
-    int result = 0;
-    for (int i = 0; i < hex.length; i++) {
-      String char = hex[i].toUpperCase();
-      int value = hexDigits.indexOf(char);
-      result = result * 16 + value;
-    }
-    return result;
-  }
-
-  static int allToDec(String value, NumberSystem system) {
-    switch (system) {
-      case NumberSystem.hex:
-        return hexToDec(value);
-      case NumberSystem.dec:
-        return int.parse(value);
-      case NumberSystem.bin:
-        return binToDec(value);
-      case NumberSystem.oct:
-        return octToDec(value);
-    }
-  }
-
-  static String decToAll(int value, NumberSystem system) {
-    switch (system) {
-      case NumberSystem.hex:
-        return toHex(value);
-      case NumberSystem.dec:
-        return value.toString();
-      case NumberSystem.bin:
-        return toBin(value);
-      case NumberSystem.oct:
-        return toOct(value);
-    }
+  static String _digitToChar(int digit) {
+    return _symbols[digit];
   }
 }

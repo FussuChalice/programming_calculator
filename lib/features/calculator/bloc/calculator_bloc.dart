@@ -17,6 +17,10 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     CalculatorAddDigit event,
     Emitter<CalculatorState> emit,
   ) {
+    if (event.digit == "." && state.display.contains(".")) {
+      return;
+    }
+
     final newDisplay = (state.display == "0" || state.shouldClearDisplay)
         ? event.digit
         : state.display + event.digit;
@@ -32,10 +36,10 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
   }
 
   String _calculate(String a, String b, String operation, NumberSystem system) {
-    int result;
+    double result;
 
-    int x = NumConverter.allToDec(a, system);
-    int y = NumConverter.allToDec(b, system);
+    double x = NumConverter.toDouble(a, system);
+    double y = NumConverter.toDouble(b, system);
 
     switch (operation) {
       case '+':
@@ -48,10 +52,10 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
         result = x * y;
         break;
       case '/':
-        result = y != 0 ? x ~/ y : 0;
+        result = y != 0 ? x / y : double.nan;
         break;
       case "mod":
-        result = y != 0 ? x % y : 0;
+        result = y != 0 ? x % y : double.nan;
         break;
 
       default:
@@ -60,7 +64,7 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
 
     debugPrint(result.toString());
 
-    return NumConverter.decToAll(result, system);
+    return NumConverter.convert(result, system);
   }
 
   void _onCalculatorOperation(

@@ -17,10 +17,14 @@ class CalculatorBoardTile extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    bool isSelected = localSystem == globalSystem;
+    final bool isSelected = localSystem == globalSystem;
 
-    int decValue = NumConverter.allToDec(value, globalSystem);
-    String localSystemValue = NumConverter.decToAll(decValue, localSystem);
+    final String localSystemValue = isSelected
+        ? value
+        : NumConverter.convert(
+            NumConverter.toDouble(value, globalSystem),
+            localSystem,
+          );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
