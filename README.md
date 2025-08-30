@@ -1,5 +1,6 @@
 # The Programming Calculator
-<img width="1920" height="1080" alt="cover" src="https://github.com/user-attachments/assets/d5c9c404-2260-4419-b09e-728e38930907" />
+<img width="1920" height="1080" alt="cover" src="https://github.com/user-attachments/assets/95616241-f3e7-4102-8c03-2a2d502454b9" />
+
 
 ## Description
 A simple and efficient **programmer's calculator** built with Flutter, designed for developers and tech enthusiasts. The calculator is **designed in the style of early macOS**, giving it a nostalgic and classic look. This project was created **for educational purposes**, to practice Flutter development, state management, and number system conversions.
