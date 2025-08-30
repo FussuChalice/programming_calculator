@@ -60,14 +60,16 @@ class _CalculatorButtonState extends State<CalculatorButton> {
                 : null,
           ),
 
-          child: Text(
-            widget.label,
-            style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'FindersKeepers',
-              fontSize: 36,
+          child: Center(
+            child: Text(
+              widget.label,
+              style: TextStyle(
+                color: Colors.black,
+                fontFamily: 'FindersKeepers',
+                fontSize: 36,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
         ),
       ),
